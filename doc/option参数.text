@@ -1,0 +1,43 @@
+1.options常用参数
+    1）使用代理
+        options.add_argument(f"--proxy-server=http://183.166.149.193:20005")
+    2）禁止策略化
+        options.add_argument('--disable-infobars')
+    3）解决DevToolsActivePort文件不存在的报错
+        options.add_argument('--no-sandbox')
+    4）指定浏览器分辨率
+        options.add_argument('window-size=1920x3000')
+    5）谷歌文档提到需要加上这个属性来规避bug
+        options.add_argument('--disable-gpu')
+    6）隐身模式（无痕模式）
+        options.add_argument('--incognito')
+    7）禁用javascript
+        options.add_argument('--disable-javascript')
+    8）最大化运行（全屏窗口）,不设置，取元素会报错
+        options.add_argument('--start-maximized')
+    9）隐藏滚动条, 应对一些特殊页面
+        options.add_argument('--hide-scrollbars')
+    10）不加载图片, 提升速度
+        options.add_argument('blink-settings=imagesEnabled=false')
+    11）浏览器不提供可视化页面. linux下如果系统不支持可视化不加这条会启动失败
+        options.add_argument('--headless')
+    12）手动指定使用的浏览器位置
+        options.binary_location = r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+    13）设置语言
+        options.add_argument('lang=en_US')
+    14）设置请求头的User-Agent
+        options.add_argument('User-Agent=Mozilla/5.0 (Linux; U; Android 8.1.0; zh-cn; BLA-AL00 Build/HUAWEIBLA-AL00)
+        AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.132 MQQBrowser/8.9 Mobile Safari/537.36')
+    15）屏蔽'保存密码'提示框
+        prefs = {"":""}
+        prefs["credentials_enable_service"] = False
+        prefs["profile.password_manager_enabled"] = False
+        chrome_option_set.add_experimental_option("prefs", prefs)
+    16）切换到开发者模式
+        option.add_experimental_option("excludeSwitches", ['enable-automation'])
+
+2.selenium关闭左上方Chrome 正受到自动测试软件的控制的提示
+	option = webdriver.ChromeOptions()
+	option.add_experimental_option('useAutomationExtension', False)
+	option.add_experimental_option("excludeSwitches", ['enable-automation'])
+	dri = webdriver.Chrome(executable_path=path, chrome_options=option)
