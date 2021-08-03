@@ -51,3 +51,7 @@ def match_img(master_img_path, second_img_path):
     res = cv2.matchTemplate(master_img_gray, second_img_rgb, cv2.TM_CCOEFF_NORMED)
     value = cv2.minMaxLoc(res)
     return value
+
+
+if __name__ == '__main__':
+    pass
