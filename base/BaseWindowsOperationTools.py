@@ -1,3 +1,4 @@
+import logging
 from base.BaseDriverTools import GreaterDriver
 
 
@@ -13,8 +14,10 @@ class WindowsOperationTools(GreaterDriver):
         """
         if size == 'set':
             self.driver.set_window_size(width, height, window_handle)
+            logging.info(f'设置窗口:{self.driver.title}尺寸，宽：{width},高：{height}')
         elif size == 'max':
             self.driver.maximize_window()
+            logging.info(f'窗口最大化')
         elif size == 'min':
             self.driver.minimize_window()
 

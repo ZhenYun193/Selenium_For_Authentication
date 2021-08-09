@@ -23,7 +23,7 @@ class GreaterDriver(object):
 
 class DriverTools(GreaterDriver):
     """
-    class：webdriver的基本操作类
+    基本操作类
     function：{
         open_page：打开页面
         element_locator：查找元素
