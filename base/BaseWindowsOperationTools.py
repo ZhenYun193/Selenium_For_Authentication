@@ -1,8 +1,17 @@
+import os.path
+import time
 import logging
 from base.BaseDriverTools import GreaterDriver
 
 
 class WindowsOperationTools(GreaterDriver):
+    def get_windows_title(self):
+        """
+        function: 获取窗口标题
+        :return:
+        """
+        return self.driver.title
+
     def set_windows_size(self, size='max', window_handle='current', width=None, height=None):
         """
         function: 设置浏览器窗口大小
@@ -14,10 +23,9 @@ class WindowsOperationTools(GreaterDriver):
         """
         if size == 'set':
             self.driver.set_window_size(width, height, window_handle)
-            logging.info(f'设置窗口:{self.driver.title}尺寸，宽：{width},高：{height}')
+            logging.info(f'设置窗口尺寸，宽：{width}，长：{height}，窗口句柄：{window_handle}')
         elif size == 'max':
             self.driver.maximize_window()
-            logging.info(f'窗口最大化')
         elif size == 'min':
             self.driver.minimize_window()
 
@@ -29,8 +37,10 @@ class WindowsOperationTools(GreaterDriver):
         """
         if event == 'back':
             self.driver.back()
+            logging.info('页面前进')
         else:
             self.driver.forward()
+            logging.info('页面后退')
 
     def windows_refresh(self):
         """
@@ -63,6 +73,20 @@ class WindowsOperationTools(GreaterDriver):
 
     def switch_alert(self):
         pass
+
+    def get_img(self, path):
+        """
+        function: 截图
+        :return:
+        """
+        rq = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+        screen_name = os.path.join(path, '%s.png' % rq)
+        try:
+            self.driver.get_screenshot_as_file(screen_name)
+            logging.info(f'截图并保存到：{path}')
+        except NameError as e:
+            logging.error(f'截图失败：{e}')
+            self.get_img(path)
 
 
 if __name__ == '__main__':

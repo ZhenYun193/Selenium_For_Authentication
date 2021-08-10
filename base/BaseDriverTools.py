@@ -1,6 +1,9 @@
+import time
+import logging
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from selenium import webdriver
 
 
 class GreaterDriver(object):
@@ -23,7 +26,7 @@ class GreaterDriver(object):
 
 class DriverTools(GreaterDriver):
     """
-    基本操作类
+    class：webdriver的基本操作类
     function：{
         open_page：打开页面
         element_locator：查找元素
@@ -50,12 +53,16 @@ class DriverTools(GreaterDriver):
         :param is_elements: 是否定位多个元素
         :return: 返回元素对象
         """
-        if is_elements is False:
-            element = self.driver.find_element(*position)
-            return element
-        else:
-            elements = self.driver.find_elements(*position)
-            return elements
+        try:
+            if is_elements is False:
+                element = self.driver.find_element(*position)
+                return element
+            else:
+                elements = self.driver.find_elements(*position)
+                return elements
+
+        except NoSuchElementException as e:
+            logging.error(f'找不到元素{e}，查找元素方法：{position[0]},值：{position[1]}')
 
     def element_operation(self, position, event='click', value=None, attribute_name=None):
         """
@@ -74,12 +81,32 @@ class DriverTools(GreaterDriver):
         element = self.element_locator(position)
         if event == 'click':
             element.click()
+            logging.info(f'点击元素：{element.text}')
         elif event == 'input':
             element.send_keys(value)
+            logging.info(f'输入值：{value}')
         elif event == 'text':
+            logging.info(f'获取元素文本值{element.text}')
             return element.text()
         elif event == 'attribute':
-            return element.get_attribute(attribute_name)
+            try:
+                return element.get_attribute(attribute_name)
+            except Exception as e:
+                logging.error(f'获取元素属性值失败：{attribute_name}')
+
+    @staticmethod
+    def is_element_displayed(element):
+        """
+        function: 元素是否存在
+        :param element:
+        :return:
+        """
+        return element.is_displayed()
+
+    @staticmethod
+    def sleep(seconds):
+        time.sleep(seconds)
+        logging.info('等待时间：%d秒' % seconds)
 
     def quit_browser(self, action=True):
         """
@@ -92,16 +119,19 @@ class DriverTools(GreaterDriver):
         """
         if action:
             self.driver.quit()
+            logging.info('关闭当前窗口')
         else:
             self.driver.close()
+            logging.info('浏览器关闭')
 
-    def implicit_wait(self, second):
+    def implicit_wait(self, seconds):
         """
         函数功能：隐式等待
-        :param second: int，等待的秒数
+        :param seconds: int，等待的秒数
         :return:
         """
-        self.driver.implicitly_wait(second)
+        self.driver.implicitly_wait(seconds)
+        logging.info(f'等待时间:{seconds}秒')
 
     def show_wait(self, timeout, poll_frequency=0.5, *args):
         """
